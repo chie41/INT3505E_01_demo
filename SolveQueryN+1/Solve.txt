@@ -1,0 +1,8 @@
+N+1 Problem là khi truy vấn dữ liệu ví dụ như khi ta truy vấn thông tin user cần thêm thông tin order của user đó.
+Nếu với mỗi user ta lại thực hiện thêm một truy vấn order:
+SELECT * FROM Users LIMIT 10; (1)
+SELECT * FROM Orders WHERE user_id = ? (10) (Loop)
+Thì việc truy vấn thì cứ 1 user có thể sẽ phải truy vấn 10 order.
+Nếu có 10 user thì việc truy vấn đầy là 10x10 =100 (độn lên rất nhiều).
+Thay vì 2 vòng lặp lồng nhau như thế 
+ta sử dụng JOIN để kết nối 2 bảng lại và query 1 lần (chỉ 10 lượt).
