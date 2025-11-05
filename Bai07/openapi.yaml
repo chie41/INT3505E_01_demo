@@ -1,0 +1,92 @@
+openapi: 3.0.0
+info:
+  title: Product API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /products:
+    get:
+      tags:
+        - Product
+      summary: Get all products
+      operationId: getProducts
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - Product
+      summary: Create a new product
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Created
+  /products/{id}:
+    get:
+      tags:
+        - Product
+      summary: Get product by ID
+      operationId: getProductById
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+    put:
+      tags:
+        - Product
+      summary: Update product
+      operationId: updateProduct
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      tags:
+        - Product
+      summary: Delete product
+      operationId: deleteProduct
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      responses:
+        '204':
+          description: Deleted
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        description:
+          type: string

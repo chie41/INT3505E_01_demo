@@ -1,0 +1,108 @@
+openapi: 3.0.0
+info:
+  title: Product API
+  version: 1.0.0
+servers:
+- url: http://localhost:3000/api
+paths:
+  /products:
+    get:
+      operationId: getProducts
+      responses:
+        "200":
+          description: OK
+      summary: Get all products
+      tags:
+      - Product
+      x-eov-operation-handler: controllers/ProductController
+    post:
+      operationId: createProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+        required: true
+      responses:
+        "201":
+          description: Created
+      summary: Create a new product
+      tags:
+      - Product
+      x-eov-operation-handler: controllers/ProductController
+  /products/{id}:
+    delete:
+      operationId: deleteProduct
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Deleted
+      summary: Delete product
+      tags:
+      - Product
+      x-eov-operation-handler: controllers/ProductController
+    get:
+      operationId: getProductById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: OK
+      summary: Get product by ID
+      tags:
+      - Product
+      x-eov-operation-handler: controllers/ProductController
+    put:
+      operationId: updateProduct
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+        required: true
+      responses:
+        "200":
+          description: Updated
+      summary: Update product
+      tags:
+      - Product
+      x-eov-operation-handler: controllers/ProductController
+components:
+  schemas:
+    Product:
+      example:
+        price: 0.8008281904610115
+        name: name
+        description: description
+        id: id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        description:
+          type: string
+      type: object
