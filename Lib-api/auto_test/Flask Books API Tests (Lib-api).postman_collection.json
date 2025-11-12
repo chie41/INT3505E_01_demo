@@ -1,0 +1,353 @@
+{
+	"info": {
+		"_postman_id": "2f2edf67-5289-4f86-b65f-f759bc316dae",
+		"name": "Flask Books API Tests (Lib-api)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48522324"
+	},
+	"item": [
+		{
+			"name": "Get Offset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const res = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Có trường pagination và data\", function () {\r",
+							"    pm.expect(res).to.have.property(\"pagination\");\r",
+							"    pm.expect(res).to.have.property(\"data\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Trả về đúng số lượng (limit=5)\", function () {\r",
+							"    pm.expect(res.data.length).to.eql(5);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/books?mode=offset&offset=0&limit=5",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "mode",
+							"value": "offset"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Page",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+							"\r",
+							"const res = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Có trường pagination\", () => {\r",
+							"    pm.expect(res.pagination).to.have.keys([\"mode\", \"page\", \"page_size\", \"total_pages\"]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Mode là page\", () => {\r",
+							"    pm.expect(res.pagination.mode).to.eql(\"page\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Data có ít nhất 1 phần tử\", () => {\r",
+							"    pm.expect(res.data.length).to.be.above(0);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/books?mode=page&page=1&page_size=10",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "mode",
+							"value": "page"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "page_size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Cursor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+							"\r",
+							"const res = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Có trường pagination và data\", () => {\r",
+							"    pm.expect(res).to.have.property(\"pagination\");\r",
+							"    pm.expect(res).to.have.property(\"data\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Mode là cursor\", () => {\r",
+							"    pm.expect(res.pagination.mode).to.eql(\"cursor\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Trả về không quá 5 phần tử\", () => {\r",
+							"    pm.expect(res.data.length).to.be.at.most(5);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Có next cursor nếu chưa tới cuối danh sách\", () => {\r",
+							"    if (res.data.length === 5) {\r",
+							"        pm.expect(res.pagination.next).to.not.be.null;\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/books?mode=cursor&after=5&limit=5",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "mode",
+							"value": "cursor"
+						},
+						{
+							"key": "after",
+							"value": "5"
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 201 Created\", () => pm.response.to.have.status(201));\r",
+							"\r",
+							"const book = pm.response.json();\r",
+							"pm.environment.set(\"book_id\", book.id);\r",
+							"\r",
+							"pm.test(\"Có id và title đúng\", () => {\r",
+							"    pm.expect(book).to.have.property(\"id\");\r",
+							"    pm.expect(book.title).to.eql(\"New Testing Book\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"New Testing Book\",\r\n  \"author\": \"Tester QA\",\r\n  \"available\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/books",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 204 No Content\", () => pm.response.to.have.status(204));\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/books/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"books",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 OK\", () => pm.response.to.have.status(200));\r",
+							"\r",
+							"const book = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Cập nhật available = false\", () => {\r",
+							"    pm.expect(book.available).to.eql(false);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"available\": false\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/books/af34857f-65dc-46f4-9751-870cbac81809",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"books",
+						"af34857f-65dc-46f4-9751-870cbac81809"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
