@@ -1,15 +1,17 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
+limiter = Limiter(key_func=get_remote_address)
 
 router = APIRouter(
     prefix="/payments",
     tags=["Payments v2"],
 )
-#Thêm phướng thức ck vào version2
+
 @router.post("/")
-async def create_payment_v2(body: dict):
-    """
-    Updated payment API (v2)
-    """
+@limiter.limit("20/minute")
+async def create_payment_v2(request: Request, body: dict):
     order_id = body.get("orderId")
     total_amount = body.get("totalAmount")
     payment_method = body.get("paymentMethod")
